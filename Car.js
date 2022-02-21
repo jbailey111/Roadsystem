@@ -27,8 +27,7 @@ class Car {
     } else if (this.direction === "w") {
       if (this.position.prev) {
         if (this.position.prev.type === "xr") {
-          console.log("w");
-          const xrDecision = this.position.next.chooseRoad(this.position);
+          const xrDecision = this.position.prev.chooseRoad(this.position);
           this.position = xrDecision[0];
           this.direction = xrDecision[1];
           this.occupySegment(this.direction);
@@ -58,8 +57,8 @@ class Car {
         this.occupySegment(this.direction);
         this.direction = "n";
         this.occupySegment(this.direction);
-      } 
-    } else if (this.direction === "n") { 
+      }
+    } else if (this.direction === "n") {
       if (this.position.next) {
         if (this.position.next.type === "xr") {
           const xrDecision = this.position.next.chooseRoad(this.position);

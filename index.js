@@ -22,8 +22,25 @@
 
 const xr = require("./Crossroad");
 const segment = require("./Segment");
-const segment1 = new segment(null, 1);
-const segment2 = new segment(segment1, 2);
-segment1.setNext(segment2);
+const Car = require("./Car");
+
+const segment1 = new segment();
+const segment2 = new segment(segment1);
 const crossRoad = new xr(segment1, segment2);
-console.log(segment1.next);
+const segment3 = new segment(crossRoad);
+const segment4 = new segment(null);
+segment4.setNext(crossRoad);
+crossRoad.addNorth(segment3);
+crossRoad.addSouth(segment4);
+let car = new Car(segment4);
+car.direction = "n";
+car.moveSegment();
+console.log(car.direction);
+car = new Car(segment4);
+car.direction = "n";
+car.moveSegment();
+console.log(car.direction);
+car = new Car(segment4);
+car.direction = "n";
+car.moveSegment();
+console.log(car.direction);
