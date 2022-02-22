@@ -4,46 +4,63 @@ const Segment = require("./Segment");
 
 class Road {
   constructor() {
-    this.length = 0;
-    this.segments = [];
     this.cars = [];
+    this.head = null;
+    this.tail = null;
+  }
+
+  calculateLength() {
+    let length = 0;
+    let current = this.head;
+    while (current) {
+      length++;
+      current = current.next;
+    }
+    return length;
   }
 
   generateSegments() {
     let head = new Segment(null, 0);
-    this.segments.push(head);
+    this.head = head;
     for (let i = 1; i < 10; i++) {
       const segment = new Segment(head, i);
       head.next = segment;
       head = segment;
-      this.segments.push(segment);
     }
-    this.length = 10;
+    this.tail = head;
   }
 
   addSegment() {
-    const newSegment = new Segment(this.segments[this.length - 1], this.length);
-    this.segments[this.length - 1].setNext(newSegment);
-    this.segments.push(newSegment);
-    this.length++;
+    const newSegment = new Segment(this.tail);
+    this.tail.setNext(newSegment);
   }
 
   addCar() {
-    let i = 0;
-    while (this.segments[i].leftOccupied) {
-      i++;
+    let current = this.head;
+    while (current) {
+      if (!current.leftOccupied) {
+        current.leftOccupied = true;
+        this.cars.push(new Car(current));
+        return;
+      }
+      current = current.next;
     }
-    let newCar = new Car(this.segments[i]);
-    this.cars.push(newCar);
-    newCar.occupySegment(1);
   }
+
+  // let i = 0;
+  // while (this.segments[i].leftOccupied) {
+  //   i++;
+  // }
+  // let newCar = new Car(this.segments[i]);
+  // this.cars.push(newCar);
+  // newCar.occupySegment(1);
 
   logSegments() {
     const car_icon = "▲";
     const segment_icon = "-";
     let logged_road_left = "";
     let logged_road_right = "";
-    let head = this.segments[0];
+    let head = this.head;
     while (head) {
       if (head.leftOccupied && head.rightOccupied) {
         logged_road_left += car_icon;
