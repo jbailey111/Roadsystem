@@ -40,8 +40,9 @@ class Road {
     while (current) {
       if (!current.leftOccupied) {
         current.leftOccupied = true;
-        this.cars.push(new Car(current));
-        return;
+        const car = new Car(current);
+        this.cars.push(car);
+        return car;
       }
       current = current.next;
     }
@@ -62,7 +63,8 @@ class Road {
     let logged_road_right = "";
     let head = this.head;
     while (head) {
-      if (head.leftOccupied && head.rightOccupied) {
+      if (head.type === "xr") {
+      } else if (head.leftOccupied && head.rightOccupied) {
         logged_road_left += car_icon;
         logged_road_right += car_icon;
       } else if (head.leftOccupied) {

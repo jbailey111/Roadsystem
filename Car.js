@@ -10,6 +10,7 @@ class Car {
     if (this.direction === "e") {
       if (this.position.next) {
         if (this.position.next.type === "xr") {
+          this.occupySegment(this.direction);
           const xrDecision = this.position.next.chooseRoad(this.position);
           this.position = xrDecision[0];
           this.direction = xrDecision[1];
@@ -27,6 +28,7 @@ class Car {
     } else if (this.direction === "w") {
       if (this.position.prev) {
         if (this.position.prev.type === "xr") {
+          this.occupySegment(this.direction);
           const xrDecision = this.position.prev.chooseRoad(this.position);
           this.position = xrDecision[0];
           this.direction = xrDecision[1];
@@ -44,6 +46,7 @@ class Car {
     } else if (this.direction === "s") {
       if (this.position.prev) {
         if (this.position.prev.type === "xr") {
+          this.occupySegment(this.direction);
           const xrDecision = this.position.prev.chooseRoad(this.position);
           this.position = xrDecision[0];
           this.direction = xrDecision[1];
@@ -61,6 +64,7 @@ class Car {
     } else if (this.direction === "n") {
       if (this.position.next) {
         if (this.position.next.type === "xr") {
+          this.occupySegment(this.direction);
           const xrDecision = this.position.next.chooseRoad(this.position);
           this.position = xrDecision[0];
           this.direction = xrDecision[1];
