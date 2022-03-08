@@ -1,55 +1,61 @@
 const Road = require("./Road");
-const Crossroad = require("./Crossroad");
-
+const xr = require("./CrossRoad");
 class City {
   constructor() {
     this.cars = [];
     this.roads = [];
-    this.crossRoads = [];
   }
 
   newRoad() {
     const newroad = new Road();
-    newroad.generateSegments();
     this.roads.push(newroad);
   }
 
-  newCrossroad() {
-    const newCrossroad = new Crossroad();
-    this.crossRoads.push(newCrossroad);
-  }
-
-  newCar() {
+  addCar() {
     for (let road of this.roads) {
-      const res = road.addCar();
-      if (res) {
-        this.cars.push(res);
+      const car = road.addCar();
+      if (car) {
+        this.cars.push(car);
         return;
       }
     }
   }
 
   connectRoads(road1, road2) {
-    this.crossRoads[0].east = road1.head;
-    road1.head.prev = this.crossRoads[0];
-    this.crossRoads[0].west = road2.tail;
-    road2.tail.next = this.crossRoads[0];
+    road1.tail.east = road2.head.east;
+    road2.head = road1.tail;
+    road1.tail.east.prev = road1.tail;
   }
 
-  xrNorth(road) {
-    this.crossRoads[0].north = road.head;
-    road.head.prev = this.crossRoads[0];
-  }
-
-  step() {
-    for (let car of this.cars) {
-      car.moveSegment();
+  disconnectRoads(road1, road2) {
+    if (road1.head === road2.tail) {
+      let segments = road1.head.east;
+      road1.head = new xr();
+      road1.head.east = segments;
+      road1.head.east.prev = road1.head;
+      road2.tail.east = null;
+    } else if (road1.tail === road2.head) {
+      let segments = road1.tail.west;
+      road1.tail = new xr();
+      road1.tail.west = segments;
+      road1.tail.west.prev = road1.tail;
+      road2.head.west = null;
     }
   }
 
-  logRoads() {
-    for (let road of this.roads) {
-      console.log(road.logSegments());
+  step() { //O(n^2) 
+    for (let car of this.cars) {
+      car.resetMove();
+    }
+    let toMove = this.cars; 
+    while (toMove.length > 0) {
+      for (let car of toMove) {
+        if (car.moved) {
+          toMove = this.cars.filter((car) => car.move);
+        } else {
+          car.moveSegment();
+        }
+      }
     }
   }
 }

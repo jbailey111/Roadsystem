@@ -6,7 +6,9 @@
   "type": "commonjs",
   "scripts": {
     "start": "node index.js",
-    "test": "jest --watchAll"
+    "test": "jest",
+    "testw": "jest --watchAll",
+    "testc": "jest --coverage"
   },
   "keywords": [],
   "author": "",

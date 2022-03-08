@@ -1,6 +1,5 @@
 class Segment {
-  constructor(prev, id) {
-    this.id = id;
+  constructor(prev = null) {
     this.leftOccupied = false;
     this.rightOccupied = false;
     this.next = null;

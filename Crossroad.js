@@ -10,6 +10,9 @@ class crossRoad {
     this.west = null;
     this.north = null;
     this.south = null;
+    this.lightHandler = null;
+    
+
 
     this.type = "xr";
   }
@@ -56,7 +59,7 @@ class crossRoad {
         return [this.north, "n"];
       } else if (this.south && !this.south.rightOccupied) {
         return [this.south, "s"];
-      } else if (this.west && !this.west.leftOccupied) {
+      } else if (this.west && !this.west.rightOccupied) {
         return [this.west, "w"];
       } else {
         return [this.east, "e"];
@@ -66,7 +69,7 @@ class crossRoad {
         return [this.north, "n"];
       } else if (this.south && !this.south.rightOccupied) {
         return [this.south, "s"];
-      } else if (this.east && !this.east.rightOccupied) {
+      } else if (this.east && !this.east.leftOccupied) {
         return [this.east, "e"];
       } else {
         return [this.west, "w"];

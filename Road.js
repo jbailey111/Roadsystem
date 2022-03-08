@@ -1,91 +1,66 @@
 //create a road class
 const Car = require("./Car");
 const Segment = require("./Segment");
+const xr = require("./Crossroad");
 
 class Road {
   constructor() {
     this.cars = [];
-    this.head = null;
-    this.tail = null;
+    this.head = new xr();
+    this.tail = new xr();
+    const init = () => {
+      const initialSegment = new Segment();
+      initialSegment.prev = this.head;
+      initialSegment.next = this.tail;
+      this.head.addEast(initialSegment);
+      this.tail.addWest(initialSegment);
+    };
+    init();
+  }
+
+  populateSegments(amount) {
+    let current = this.head.east;
+    for (let i = 0; i < amount; i++) {
+      const newSegment = new Segment(current);
+      newSegment.next = current.next;
+      current.setNext(newSegment);
+      current = newSegment;
+    }
   }
 
   calculateLength() {
     let length = 0;
-    let current = this.head;
-    while (current) {
+    let current = this.head.east;
+    while (current.type !== "xr") {
       length++;
       current = current.next;
     }
     return length;
   }
 
-  generateSegments() {
-    let head = new Segment(null, 0);
-    this.head = head;
-    for (let i = 1; i < 10; i++) {
-      const segment = new Segment(head, i);
-      head.next = segment;
-      head = segment;
-    }
-    this.tail = head;
-  }
-
   addSegment() {
-    const newSegment = new Segment(this.tail);
-    this.tail.setNext(newSegment);
+    let current = this.head.east;
+    const newSegment = new Segment(current);
+    newSegment.next = current.next;
+    current.setNext(newSegment);
   }
 
   addCar() {
-    let current = this.head;
+    let current = this.head.east;
     while (current) {
       if (!current.leftOccupied) {
         current.leftOccupied = true;
         const car = new Car(current);
-        this.cars.push(car);
+        car.direction = "e";
+        return car;
+      } else if (!current.rightOccupied) {
+        current.rightOccupied = true;
+        const car = new Car(current);
+        car.direction = "w";
         return car;
       }
       current = current.next;
     }
-  }
-
-  // let i = 0;
-  // while (this.segments[i].leftOccupied) {
-  //   i++;
-  // }
-  // let newCar = new Car(this.segments[i]);
-  // this.cars.push(newCar);
-  // newCar.occupySegment(1);
-
-  logSegments() {
-    const car_icon = "▲";
-    const segment_icon = "-";
-    let logged_road_left = "";
-    let logged_road_right = "";
-    let head = this.head;
-    while (head) {
-      if (head.type === "xr") {
-      } else if (head.leftOccupied && head.rightOccupied) {
-        logged_road_left += car_icon;
-        logged_road_right += car_icon;
-      } else if (head.leftOccupied) {
-        logged_road_left += car_icon;
-        logged_road_right += segment_icon;
-      } else if (head.rightOccupied) {
-        logged_road_right += car_icon;
-        logged_road_left += segment_icon;
-      } else {
-        logged_road_left += segment_icon;
-        logged_road_right += segment_icon;
-      }
-      head = head.next;
-    }
-    return logged_road_left + "\n" + logged_road_right;
-  }
-
-  step() {
-    this.cars.forEach((car) => {
-      car.moveSegment();
-    });
   }
 }
 

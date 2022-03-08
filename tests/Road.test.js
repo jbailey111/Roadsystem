@@ -1,55 +1,45 @@
 const roadclass = require("../Road");
 
-test("It initilises a road class", () => {
-  road = new roadclass();
-  expect(road).toBeTruthy();
-});
+describe("Road", () => {
+  beforeEach(() => {
+    road = new roadclass();
+  });
 
-test("It generates a road with 10 segments", () => {
-  road.generateSegments();
-  expect(road.calculateLength()).toBe(10);
-});
+  test("It initilises a road class", () => {
+    expect(road).toBeTruthy();
+  });
 
-test("It adds a new road segment", () => {
-  road.addSegment();
-  expect(road.calculateLength()).toBe(11);
-});
+  test("It has Cross roads on each end of the road seperated with one segement between them", () => {
+    expect(road.head.type).toBe("xr");
+    expect(road.tail.type).toBe("xr");
+    expect(road.head.east.type).toBe("seg") &&
+      expect(road.tail.west.type).toBe("seg");
+  });
 
-test("It initialises a car to the first segment of the Road", () => {
-  road.addCar();
-  expect(road.cars.length).toBe(1);
-  expect(road.head.leftOccupied).toBe(true);
-});
+  test("It populates the road with x amounts of segments", () => {
+    road.populateSegments(10);
+    expect(road.calculateLength()).toBe(11);
+  });
 
-test("It logs the Road Segments to the console", () => {
-  expect(road.logSegments()).toBe("▲----------\n-----------");
-});
+  test("It adds a segment to the road", () => {
+    road.addSegment();
+    expect(road.calculateLength()).toBe(2);
+    road.populateSegments(10);
+    expect(road.calculateLength()).toBe(12);
+  });
 
-test("It steps the simulation moving the car", () => {
-  road.step();
-  expect(road.logSegments()).toBe("-▲---------\n-----------");
-  expect(road.head.leftOccupied).toBe(false);
-});
-
-test("It can initalises a second car on the road", () => {
-  road.addCar();
-  expect(road.cars.length).toBe(2);
-  expect(road.head.leftOccupied).toBe(true);
-  expect(road.logSegments()).toBe("▲▲---------\n-----------");
-});
-
-test("It initialises a third car in the third position", () => {
-  road.addCar();
-  expect(road.cars.length).toBe(3);
-  expect(road.head.next.next.leftOccupied).toBe(true);
-  expect(road.logSegments()).toBe("▲▲▲--------\n-----------");
-});
-
-test("It moves all three cars", () => {
-  road.step();
-  let current = road.head.next;
-  for (let i = 0; i < 3; i++) {
-    expect(current.leftOccupied).toBe(true);
-  }
-  expect(road.logSegments()).toBe("-▲▲▲-------\n-----------");
+  test("It finds a space for a car and adds it to the road", () => {
+    const car = road.addCar();
+    expect(car).toBeTruthy();
+    expect(car.position.type).toBe("seg");
+    expect(car.position.leftOccupied).toBe(true);
+    expect(car.position.rightOccupied).toBe(false);
+    const car2 = road.addCar();
+    expect(car2.position.rightOccupied).toBe(true) &&
+      expect(car2.position.leftOccupied).toBe(true);
+    const car3 = road.addCar();
+    expect(car3.position.leftOccupied).toBe(true) &&
+      expect(car3.position.rightOccupied).toBe(false) &&
+      expect(car3.position.prev.type).toBe("seg");
+  });
 });

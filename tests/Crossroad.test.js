@@ -26,7 +26,7 @@ describe("Crossroads", () => {
     expect(crossRoad.south).toBe(segment4);
   });
 
-  test("It directs a car arriving from the west to other directions", () => {
+  test("It directs a car arriving from the east to other directions", () => {
     let car = new Car(segment1);
     car.direction = "w";
     car.moveSegment();
@@ -39,6 +39,10 @@ describe("Crossroads", () => {
     car.direction = "w";
     car.moveSegment();
     expect(car.direction).toBe("w");
+    car = new Car(segment1);
+    car.direction = "w";
+    car.moveSegment();
+    expect(car.direction).toBe("e");
   });
 
   test("It directs a car arriving from the north to other directions", () => {
@@ -54,6 +58,10 @@ describe("Crossroads", () => {
     car.direction = "s";
     car.moveSegment();
     expect(car.direction).toBe("s");
+    car = new Car(segment3);
+    car.direction = "s";
+    car.moveSegment();
+    expect(car.direction).toBe("n");
   });
 
   test("It directs a car arriving from the south to other directions", () => {
@@ -69,6 +77,10 @@ describe("Crossroads", () => {
     car.direction = "n";
     car.moveSegment();
     expect(car.direction).toBe("n");
+    car = new Car(segment4);
+    car.direction = "n";
+    car.moveSegment();
+    expect(car.direction).toBe("s");
   });
 
   test("It directs a car arriving from the east to other directions", () => {
@@ -84,30 +96,28 @@ describe("Crossroads", () => {
     car.direction = "e";
     car.moveSegment();
     expect(car.direction).toBe("e");
+    car = new Car(segment2);
+    car.direction = "e";
+    car.moveSegment();
+    expect(car.direction).toBe("w");
   });
 
-  // test("It runs properly after using the choose function", () => {
-  //   let car = new Car(segment1);
-  //   car.direction = "e";
-  //   car.moveSegment();
-  //   expect(car.direction).toBe("n") && expect(car.position.next).toBeTruthy();
-  //   car.moveSegment();
-  //   expect(car.position.next).toBeNull() &&
-  //     expect(car.position.prev).toBe(segment3);
-  // });
+  test("It runs properly after using the choose function", () => {
+    let car = new Car(segment2);
+    crossRoad.north.next = new segment();
+    car.direction = "e";
+    car.moveSegment();
+    expect(car.direction).toBe("n") && expect(car.position.next).toBeTruthy();
+    car.moved = false;
+    car.moveSegment();
+    expect(car.position.next).toBeNull() &&
+      expect(car.position.prev).toBe(segment3);
+  });
 
-  // test("It doesnt erase a segment with the add functions", () => {
-  //   const segment1 = new segment();
-  //   const segment2 = new segment(segment1);
-  //   const crossRoad = new xr(segment1, segment2);
-  //   const segment3 = new segment(crossRoad);
-  //   const segment4 = new segment(null);
-  //   segment4.setNext(crossRoad);
-  //   crossRoad.addNorth(segment3);
-  //   crossRoad.addSouth(segment4);
-  //   expect(crossRoad.addEast(segment4)).toBe(false);
-  //   expect(crossRoad.addNorth(segment4)).toBe(false);
-  //   expect(crossRoad.addSouth(segment4)).toBe(false);
-  //   expect(crossRoad.addWest(segment4)).toBe(false);
-  // });
+  test("It doesnt erase a segment with the add functions", () => {
+    expect(crossRoad.addEast(segment4)).toBe(false);
+    expect(crossRoad.addNorth(segment4)).toBe(false);
+    expect(crossRoad.addSouth(segment4)).toBe(false);
+    expect(crossRoad.addWest(segment4)).toBe(false);
+  });
 });
